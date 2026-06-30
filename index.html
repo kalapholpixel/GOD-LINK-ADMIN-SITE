@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Property Sales Admin</title>
+  <style>
+    body{font-family:Inter,Segoe UI,Arial;margin:0;padding:1rem;background:#f6f6f4}
+    .wrap{max-width:980px;margin:0 auto}
+    textarea{width:100%;min-height:400px;font-family:monospace}
+    header{display:flex;align-items:center;justify-content:space-between}
+    button{padding:0.6rem 1rem;border-radius:8px;border:0;background:#1d6b44;color:#fff}
+    .note{color:#444;margin:0.5rem 0}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Property Sales — Admin</h1>
+      <div>
+        <button id="save">Save</button>
+      </div>
+    </header>
+
+    <p class="note">Edit the JSON below. Saving writes to <code>data/data.json</code>.</p>
+    <textarea id="editor">Loading...</textarea>
+    <p class="note">After saving, the client site can load the updated data from <code>../PROPERTY-SALES-ADMIN/data/data.json</code>.</p>
+  </div>
+
+  <script>
+    async function load(){
+      try{
+        const res = await fetch('data/data.json');
+        if(!res.ok) throw new Error('fetch failed');
+        const txt = await res.text();
+        document.getElementById('editor').value = txt;
+      }catch(e){
+        document.getElementById('editor').value = JSON.stringify(window.__fallback||{},null,2);
+      }
+    }
+
+    document.getElementById('save').addEventListener('click', async ()=>{
+      const payload = document.getElementById('editor').value;
+      try{
+        // POST to a simple server endpoint (not implemented in static mode)
+        const res = await fetch('/save', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:payload
+        });
+        if(res.ok) alert('Saved. If running static server, manually update data/data.json');
+        else alert('Save failed: ' + res.statusText);
+      }catch(err){
+        // Fallback: download file for manual replacement
+        const blob = new Blob([payload], {type:'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'data.json'; a.click(); URL.revokeObjectURL(url);
+        alert('Download ready. Replace data/data.json with downloaded file.');
+      }
+    });
+
+    load();
+  </script>
+</body>
+</html>
