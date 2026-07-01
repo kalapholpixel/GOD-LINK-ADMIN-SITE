@@ -1,0 +1,23 @@
+[Unit]
+Description=God Link Admin API
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/GOD-LINK-ADMIN-SITE
+EnvironmentFile=/var/www/GOD-LINK-ADMIN-SITE/.env
+ExecStart=/usr/bin/python3 /var/www/GOD-LINK-ADMIN-SITE/server.py
+Restart=always
+RestartSec=3
+
+# Basic hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/www/GOD-LINK-ADMIN-SITE/data
+
+[Install]
+WantedBy=multi-user.target

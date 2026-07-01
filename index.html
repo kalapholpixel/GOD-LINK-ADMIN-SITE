@@ -135,7 +135,18 @@
     ];
     const pageKeys = ['home','listings','contact','property'];
     const themeKeys = ['ink','ink2','paper','paper2','paper3','primary','primarySoft','success','successSoft','danger','dangerSoft','background','overlay','overlayLight','shadow'];
-    const state = { data:null, active:'basics', rawValid:true };
+    const state = { data:null, active:'basics', rawValid:true, canSave:true, authChecked:false };
+    const runtimeConfig = window.GODLINK_ADMIN_CONFIG || {};
+    const query = new URLSearchParams(window.location.search);
+    const apiBaseInput = runtimeConfig.apiBase || query.get('apiBase') || localStorage.getItem('godlink_api_base') || '';
+    let adminKeyInput = runtimeConfig.adminKey || query.get('adminKey') || localStorage.getItem('godlink_admin_key') || '';
+    const API_BASE = apiBaseInput ? apiBaseInput.replace(/\/$/, '') : '';
+    let ADMIN_KEY = adminKeyInput || '';
+
+    if(query.get('apiBase')) localStorage.setItem('godlink_api_base', API_BASE);
+    if(query.get('adminKey')) localStorage.setItem('godlink_admin_key', ADMIN_KEY);
+
+    const apiUrl = path => API_BASE ? API_BASE + path : path;
 
     const $ = (sel, root=document) => root.querySelector(sel);
     const el = (tag, attrs={}, children=[]) => {
@@ -169,7 +180,63 @@
       clearTimeout(window.toastTimer);
       window.toastTimer = setTimeout(() => box.classList.remove('show'), 3200);
     };
-    const markDirty = () => $('#status').textContent = 'Unsaved changes';
+    const markDirty = () => {
+      const suffix = state.canSave ? '' : ' (save locked)';
+      $('#status').textContent = 'Unsaved changes' + suffix;
+    };
+
+    async function verifyAdminKey(key){
+      const headers = {'Content-Type':'application/json'};
+      if(key) headers['X-Admin-Key'] = key;
+      const res = await fetch(apiUrl('/api/auth/verify'), { method:'POST', headers, body:'{}' });
+      let payload = null;
+      try{ payload = await res.json(); }catch(_err){ payload = null; }
+      return { ok:res.ok, payload:payload || {} };
+    }
+
+    async function ensureSaveAuth(){
+      try{
+        const initial = await verifyAdminKey(ADMIN_KEY);
+        if(initial.ok){
+          state.canSave = true;
+          state.authChecked = true;
+          return;
+        }
+
+        const needsAuth = initial.payload && initial.payload.authRequired;
+        if(!needsAuth){
+          state.canSave = false;
+          state.authChecked = true;
+          return;
+        }
+
+        let attempts = 0;
+        while(attempts < 3){
+          const input = window.prompt('Enter admin save key for this environment:');
+          if(input == null || !String(input).trim()) break;
+
+          const candidate = String(input).trim();
+          const check = await verifyAdminKey(candidate);
+          if(check.ok){
+            ADMIN_KEY = candidate;
+            localStorage.setItem('godlink_admin_key', ADMIN_KEY);
+            state.canSave = true;
+            state.authChecked = true;
+            toast('Admin key verified. Save enabled.');
+            return;
+          }
+
+          attempts += 1;
+          toast('Invalid admin key. Try again.');
+        }
+      }catch(_err){
+      }
+
+      state.canSave = false;
+      state.authChecked = true;
+      $('#status').textContent = 'Content loaded (save locked: authentication required)';
+      toast('Save is locked until a valid admin key is provided.');
+    }
 
     function applyBranding(){
       const logoSrc = getPath(state.data,'logo.src') || '';
@@ -594,10 +661,10 @@
 
     async function load(){
       try{
-        const res = await fetch('data/data.json?ts=' + Date.now());
-        if(!res.ok) throw new Error('Could not load data/data.json');
+        const res = await fetch(apiUrl('/api/data'), { cache:'no-store' });
+        if(!res.ok) throw new Error('Could not load content data');
         state.data = await res.json();
-        $('#status').textContent = 'Content loaded';
+        $('#status').textContent = API_BASE ? `Content loaded from ${API_BASE}` : 'Content loaded';
         render();
       }catch(err){
         state.data = { siteName:'', siteTagline:'', pageMeta:{}, logo:{}, theme:{}, hero:{stats:[]}, reasons:[], contact:{}, footer:{}, propertyCategories:[], properties:[] };
@@ -608,20 +675,39 @@
     }
 
     async function save(){
+      if(!state.authChecked) await ensureSaveAuth();
+      if(!state.canSave){
+        toast('Save is locked. Reload with a valid admin key.');
+        return;
+      }
       if(!state.rawValid){
         toast('Fix the raw JSON error before saving.');
         return;
       }
       try{
-        const res = await fetch('/save', {
+        const headers = {'Content-Type':'application/json'};
+        if(ADMIN_KEY) headers['X-Admin-Key'] = ADMIN_KEY;
+        const res = await fetch(apiUrl('/save'), {
           method:'POST',
-          headers:{'Content-Type':'application/json'},
+          headers,
           body:JSON.stringify(state.data)
         });
-        if(!res.ok) throw new Error(await res.text() || 'Save failed');
-        $('#status').textContent = 'Saved just now';
+        let payload = null;
+        try{
+          payload = await res.json();
+        }catch(_err){
+          payload = null;
+        }
+        if(!res.ok) throw new Error((payload && payload.error) || 'Save failed');
+        const savedVersion = payload && payload.version ? ` (version ${payload.version})` : '';
+        $('#status').textContent = `Saved just now${savedVersion}`;
         toast('Saved to data/data.json');
       }catch(err){
+        if(String(err && err.message || '').includes('X-Admin-Key')){
+          state.canSave = false;
+          toast('Invalid admin key. Save is locked.');
+          return;
+        }
         download();
         toast('Could not save through the server. A data.json download was created instead.');
       }
@@ -640,7 +726,7 @@
     $('#saveBtn').addEventListener('click',save);
     $('#downloadBtn').addEventListener('click',download);
     $('#reloadBtn').addEventListener('click',load);
-    load();
+    load().then(ensureSaveAuth);
   </script>
 </body>
 </html>
