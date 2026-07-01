@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>God Link Admin</title>
+  <link id="appFavicon" rel="icon" href="" />
   <style>
     :root{
       --ink:#1d1b18;
@@ -34,6 +35,7 @@
     .app{min-height:100vh;display:grid;grid-template-columns:280px minmax(0,1fr)}
     .side{position:sticky;top:0;height:100vh;background:#29251f;color:#fff;padding:1.1rem;display:flex;flex-direction:column;gap:1rem}
     .brand{padding:.4rem .2rem 1rem;border-bottom:1px solid rgba(255,255,255,.16)}
+    .brand-logo{width:76px;height:76px;object-fit:contain;border-radius:12px;background:#fff;padding:.2rem;display:block;margin:0 0 .65rem;border:1px solid rgba(255,255,255,.2)}
     .brand h1{font-size:1.18rem;line-height:1.15;margin:.2rem 0 .35rem}
     .brand p{margin:0;color:#d9d0c1;font-size:.9rem}
     .nav{display:grid;gap:.35rem}
@@ -92,8 +94,9 @@
   <div class="app">
     <aside class="side">
       <div class="brand">
-        <h1>God Link Admin</h1>
-        <p>Edit website content without touching code.</p>
+        <img class="brand-logo" id="brandLogo" alt="" src="" />
+        <h1 id="brandName">God Link Admin</h1>
+        <p id="brandTagline">Edit website content without touching code.</p>
       </div>
       <nav class="nav" id="nav"></nav>
       <div class="side-footer">
@@ -158,6 +161,7 @@
     };
     const lines = value => String(value || '').split('\n').map(v => v.trim()).filter(Boolean);
     const toText = value => Array.isArray(value) ? value.join('\n') : (value == null ? '' : value);
+    const defaultFavicon = () => 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#29251f"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="Georgia,serif" font-size="30" fill="#f6dc98">GL</text></svg>');
     const toast = message => {
       const box = $('#toast');
       box.textContent = message;
@@ -166,6 +170,25 @@
       window.toastTimer = setTimeout(() => box.classList.remove('show'), 3200);
     };
     const markDirty = () => $('#status').textContent = 'Unsaved changes';
+
+    function applyBranding(){
+      const logoSrc = getPath(state.data,'logo.src') || '';
+      const logoAlt = getPath(state.data,'logo.alt') || 'Company logo';
+      const siteName = getPath(state.data,'siteName') || 'God Link Agency';
+      const siteTagline = getPath(state.data,'siteTagline') || 'Edit website content without touching code.';
+      const brandLogo = $('#brandLogo');
+      const brandName = $('#brandName');
+      const brandTagline = $('#brandTagline');
+      if(brandLogo){
+        brandLogo.src = logoSrc || defaultFavicon();
+        brandLogo.alt = logoAlt;
+      }
+      if(brandName) brandName.textContent = siteName + ' Admin';
+      if(brandTagline) brandTagline.textContent = siteTagline;
+      const icon = $('#appFavicon');
+      if(icon) icon.setAttribute('href', logoSrc || defaultFavicon());
+      document.title = siteName + ' Admin';
+    }
 
     function field(label, path, options={}){
       const id = 'f_' + path.replace(/[^a-z0-9]/gi,'_') + Math.random().toString(16).slice(2);
@@ -203,6 +226,7 @@
         setPath(state.data,path,value);
         markDirty();
         if(options.preview) updatePreview(options.preview,input.value);
+        if(path === 'siteName' || path === 'siteTagline' || path === 'logo.src' || path === 'logo.alt') applyBranding();
       });
       wrap.append(input);
       if(options.hint) wrap.append(el('p',{class:'hint',text:options.hint}));
@@ -233,6 +257,7 @@
         setPath(state.data,path,urlInput.value);
         markDirty();
         updatePreview(previewId,urlInput.value);
+        applyBranding();
       });
       const dropzone = el('div',{class:'file-dropzone',html:'<p>Drag an image here, or click the button below to choose a file from your computer.</p>'});
       const fileInput = el('input',{type:'file',accept:'image/*'});
@@ -247,6 +272,7 @@
         urlInput.value = value;
         updatePreview(previewId,value);
         markDirty();
+        applyBranding();
       };
 
       const handleFile = async file => {
@@ -411,9 +437,9 @@
         listField('Bathrooms', item, 'baths', {type:'number',as:'number',placeholder:'e.g. 2'}),
         listField('Area', item, 'area',{placeholder:'Example: 1,450 sqft'}),
         listField('Parking', item, 'parking',{placeholder:'Example: 2 spaces'}),
-        listField('Main image', item, 'image', {full:true,preview:'property_preview_' + index,placeholder:'Paste image URL or use upload'}),
+        listField('Main image', item, 'image', {full:true,preview:'property_preview_' + index,placeholder:'Paste image URL or use upload',imageUpload:true}),
         listField('Description', item, 'desc', {type:'textarea',full:true,placeholder:'Write a short description'}),
-        listField('Gallery images, one per line', item, 'gallery', {type:'textarea',as:'lines',full:true,placeholder:'One image URL per line'}),
+        listField('Gallery images, one per line', item, 'gallery', {type:'textarea',as:'lines',full:true,placeholder:'One image URL per line',imageUpload:true,imageUploadMultiple:true}),
         listField('Features, one per line', item, 'features', {type:'textarea',as:'lines',full:true,placeholder:'One feature per line'})
       ]));
       const preview = el('img',{class:'preview',id:'property_preview_' + index,alt:''});
@@ -446,6 +472,55 @@
         markDirty();
       });
       wrap.append(input);
+      if(options.imageUpload){
+        const dropzone = el('div',{class:'file-dropzone',html:'<p>Drag an image here, or click to choose from your computer.</p>'});
+        const fileInput = el('input',{type:'file',accept:'image/*'});
+        fileInput.style.display = 'none';
+        if(options.imageUploadMultiple) fileInput.multiple = true;
+        const chooseButton = el('button',{type:'button',class:'secondary',text:options.imageUploadMultiple ? 'Select gallery images from PC' : 'Select image from PC'});
+        chooseButton.addEventListener('click', () => fileInput.click());
+
+        const setFromFiles = async files => {
+          if(!files || !files.length) return;
+          try{
+            const dataUrls = await Promise.all(Array.from(files).map(readImageFile));
+            if(options.as === 'lines'){
+              const current = Array.isArray(obj[key]) ? obj[key] : lines(input.value);
+              const merged = [...current, ...dataUrls];
+              obj[key] = merged;
+              input.value = merged.join('\n');
+              toast(dataUrls.length + ' image(s) added to gallery.');
+            }else{
+              obj[key] = dataUrls[0] || '';
+              input.value = obj[key];
+              if(options.preview) updatePreview(options.preview,obj[key]);
+              toast('Image loaded from your computer.');
+            }
+            markDirty();
+          }catch(err){
+            toast(err.message || 'Could not upload image.');
+          }
+        };
+
+        dropzone.addEventListener('click', () => fileInput.click());
+        dropzone.addEventListener('dragover', event => {
+          event.preventDefault();
+          event.dataTransfer.dropEffect = 'copy';
+          dropzone.classList.add('dragover');
+        });
+        dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+        dropzone.addEventListener('drop', event => {
+          event.preventDefault();
+          dropzone.classList.remove('dragover');
+          setFromFiles(event.dataTransfer.files);
+        });
+        fileInput.addEventListener('change', () => setFromFiles(fileInput.files));
+
+        const uploadHint = options.imageUploadMultiple
+          ? 'Upload multiple gallery images at once, or paste URLs one per line.'
+          : 'Upload a local image or paste an image URL.';
+        wrap.append(dropzone, chooseButton, fileInput, el('p',{class:'hint',text:uploadHint}));
+      }
       return wrap;
     }
 
@@ -514,6 +589,7 @@
         raw: renderRaw
       };
       views[state.active]().forEach(node => content.append(node));
+      applyBranding();
     }
 
     async function load(){
