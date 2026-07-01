@@ -1,65 +1,569 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Property Sales Admin</title>
+  <title>God Link Admin</title>
   <style>
-    body{font-family:Inter,Segoe UI,Arial;margin:0;padding:1rem;background:#f6f6f4}
-    .wrap{max-width:980px;margin:0 auto}
-    textarea{width:100%;min-height:400px;font-family:monospace}
-    header{display:flex;align-items:center;justify-content:space-between}
-    button{padding:0.6rem 1rem;border-radius:8px;border:0;background:#1d6b44;color:#fff}
-    .note{color:#444;margin:0.5rem 0}
+    :root{
+      --ink:#1d1b18;
+      --muted:#66615a;
+      --line:#ddd6ca;
+      --paper:#fbfaf7;
+      --panel:#ffffff;
+      --soft:#f1ece2;
+      --green:#1d6b44;
+      --green2:#e4f4eb;
+      --gold:#b8890e;
+      --red:#a23c3c;
+      --blue:#315f9d;
+      --shadow:0 16px 40px rgba(33,28,20,.08);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--paper);color:var(--ink)}
+    button,input,textarea,select{font:inherit}
+    button{border:0;border-radius:8px;padding:.68rem .92rem;background:var(--ink);color:#fff;cursor:pointer;font-weight:700}
+    button:hover{filter:brightness(.96)}
+    button.secondary{background:#ece6da;color:var(--ink)}
+    button.success{background:var(--green)}
+    button.danger{background:var(--red)}
+    button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+    input,textarea,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:.72rem .78rem}
+    textarea{min-height:96px;resize:vertical;line-height:1.45}
+    label{display:block;font-size:.82rem;font-weight:800;color:#3d3933;margin:0 0 .35rem}
+    .app{min-height:100vh;display:grid;grid-template-columns:280px minmax(0,1fr)}
+    .side{position:sticky;top:0;height:100vh;background:#29251f;color:#fff;padding:1.1rem;display:flex;flex-direction:column;gap:1rem}
+    .brand{padding:.4rem .2rem 1rem;border-bottom:1px solid rgba(255,255,255,.16)}
+    .brand h1{font-size:1.18rem;line-height:1.15;margin:.2rem 0 .35rem}
+    .brand p{margin:0;color:#d9d0c1;font-size:.9rem}
+    .nav{display:grid;gap:.35rem}
+    .nav button{background:transparent;color:#f8f4ed;text-align:left;border:1px solid transparent;font-weight:700}
+    .nav button.active{background:#fff;color:#29251f}
+    .nav button:hover{border-color:rgba(255,255,255,.25)}
+    .side-footer{margin-top:auto;display:grid;gap:.55rem}
+    .savebar{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
+    .status{min-height:1.3rem;color:#d9d0c1;font-size:.86rem}
+    main{padding:1.2rem;min-width:0}
+    .top{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;margin:0 auto 1rem;max-width:1180px}
+    .top h2{font-size:1.55rem;margin:.15rem 0 .25rem}
+    .top p{margin:0;color:var(--muted)}
+    .content{max-width:1180px;margin:0 auto;display:grid;gap:1rem}
+    .section{display:none}
+    .section.active{display:grid;gap:1rem}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);padding:1rem;min-width:0}
+    .panel-head{display:flex;justify-content:space-between;gap:1rem;align-items:center;margin-bottom:1rem}
+    .panel-head h3{margin:0;font-size:1.05rem}
+    .panel-head p{margin:.18rem 0 0;color:var(--muted);font-size:.9rem}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+    .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .field{min-width:0}
+    .field.full{grid-column:1/-1}
+    .hint{font-size:.78rem;color:var(--muted);margin:.32rem 0 0}
+    .file-dropzone{border:2px dashed var(--line);border-radius:12px;background:rgba(241,236,226,.6);padding:1rem;min-height:96px;display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer;transition:background .2s,border-color .2s}
+    .file-dropzone.dragover{border-color:var(--blue);background:rgba(49,95,157,.08)}
+    .file-dropzone p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.4}
+    .preview{height:126px;border-radius:8px;border:1px solid var(--line);background:var(--soft);object-fit:cover;width:100%;display:block}
+    .color-row{display:grid;grid-template-columns:56px minmax(0,1fr);gap:.55rem;align-items:center}
+    input[type=color]{height:44px;padding:3px}
+    .items{display:grid;gap:.85rem}
+    .item{border:1px solid var(--line);border-radius:8px;background:#fff;padding:1rem;min-width:0}
+    .item-title{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.9rem}
+    .item-title strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .item-actions{display:flex;gap:.45rem;flex-wrap:wrap;justify-content:flex-end}
+    .pill{display:inline-flex;align-items:center;border-radius:999px;background:var(--green2);color:#174d34;padding:.25rem .55rem;font-size:.76rem;font-weight:800}
+    .raw textarea{min-height:64vh;font-family:Consolas,Monaco,monospace;font-size:.9rem}
+    .empty{padding:1.2rem;border:1px dashed var(--line);border-radius:8px;color:var(--muted);background:#fff}
+    .toast{position:fixed;right:1rem;bottom:1rem;background:#1d1b18;color:#fff;border-radius:8px;padding:.8rem 1rem;box-shadow:var(--shadow);display:none;max-width:360px}
+    .toast.show{display:block}
+    @media (max-width:900px){
+      .app{grid-template-columns:1fr}
+      .side{position:relative;height:auto}
+      .nav{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .savebar{grid-template-columns:1fr}
+      main{padding:.8rem}
+      .top{display:grid}
+      .grid,.grid.three{grid-template-columns:1fr}
+      .panel-head,.item-title{display:grid;align-items:start}
+      .item-actions{justify-content:start}
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1>Property Sales — Admin</h1>
-      <div>
-        <button id="save">Save</button>
+  <div class="app">
+    <aside class="side">
+      <div class="brand">
+        <h1>God Link Admin</h1>
+        <p>Edit website content without touching code.</p>
       </div>
-    </header>
+      <nav class="nav" id="nav"></nav>
+      <div class="side-footer">
+        <div class="status" id="status">Loading content...</div>
+        <div class="savebar">
+          <button class="success" id="saveBtn">Save</button>
+          <button class="secondary" id="downloadBtn">Download</button>
+        </div>
+      </div>
+    </aside>
 
-    <p class="note">Edit the JSON below. Saving writes to <code>data/data.json</code>.</p>
-    <textarea id="editor">Loading...</textarea>
-    <p class="note">After saving, the client site can load the updated data from <code>../PROPERTY-SALES-ADMIN/data/data.json</code>.</p>
+    <main>
+      <div class="top">
+        <div>
+          <h2 id="pageTitle">Content Editor</h2>
+          <p id="pageHelp">Choose a section, make changes, then save.</p>
+          <p id="pageTip" class="hint">No coding needed: edit text fields, upload images, and save your changes.</p>
+        </div>
+        <button class="ghost" id="reloadBtn">Reload</button>
+      </div>
+      <div class="content" id="content"></div>
+    </main>
   </div>
+  <div class="toast" id="toast"></div>
 
   <script>
+    const sections = [
+      { id:'basics', title:'Basics', help:'Brand name, tagline, logo, and contact details.' },
+      { id:'pages', title:'Pages', help:'Browser titles and descriptions for each page.' },
+      { id:'theme', title:'Theme', help:'Website colors and visual style values.' },
+      { id:'hero', title:'Hero', help:'The main homepage headline, image, and highlight.' },
+      { id:'reasons', title:'Reasons', help:'Short trust points shown on the site.' },
+      { id:'categories', title:'Categories', help:'Property filters shown to visitors.' },
+      { id:'properties', title:'Properties', help:'Listings, galleries, features, and prices.' },
+      { id:'raw', title:'Raw JSON', help:'Advanced full-data editor.' }
+    ];
+    const pageKeys = ['home','listings','contact','property'];
+    const themeKeys = ['ink','ink2','paper','paper2','paper3','primary','primarySoft','success','successSoft','danger','dangerSoft','background','overlay','overlayLight','shadow'];
+    const state = { data:null, active:'basics', rawValid:true };
+
+    const $ = (sel, root=document) => root.querySelector(sel);
+    const el = (tag, attrs={}, children=[]) => {
+      const node = document.createElement(tag);
+      Object.entries(attrs).forEach(([key,value]) => {
+        if(key === 'class') node.className = value;
+        else if(key === 'text') node.textContent = value == null ? '' : value;
+        else if(key === 'html') node.innerHTML = value;
+        else node.setAttribute(key,value);
+      });
+      children.forEach(child => node.append(child));
+      return node;
+    };
+    const getPath = (obj, path) => path.split('.').reduce((acc,key) => acc == null ? '' : acc[key], obj);
+    const setPath = (obj, path, value) => {
+      const keys = path.split('.');
+      let ref = obj;
+      keys.slice(0,-1).forEach(key => {
+        if(!ref[key] || typeof ref[key] !== 'object') ref[key] = {};
+        ref = ref[key];
+      });
+      ref[keys[keys.length-1]] = value;
+    };
+    const lines = value => String(value || '').split('\n').map(v => v.trim()).filter(Boolean);
+    const toText = value => Array.isArray(value) ? value.join('\n') : (value == null ? '' : value);
+    const toast = message => {
+      const box = $('#toast');
+      box.textContent = message;
+      box.classList.add('show');
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => box.classList.remove('show'), 3200);
+    };
+    const markDirty = () => $('#status').textContent = 'Unsaved changes';
+
+    function field(label, path, options={}){
+      const id = 'f_' + path.replace(/[^a-z0-9]/gi,'_') + Math.random().toString(16).slice(2);
+      const wrap = el('div',{class:'field ' + (options.full ? 'full' : '')});
+      wrap.append(el('label',{for:id,text:label}));
+      let input;
+      if(options.type === 'textarea'){
+        input = el('textarea',{id,placeholder:options.placeholder || ''});
+        input.value = toText(getPath(state.data,path));
+      }else if(options.type === 'select'){
+        input = el('select',{id});
+        if(options.placeholder) input.append(el('option',{value:'',text:options.placeholder}));
+        (options.choices || []).forEach(choice => input.append(el('option',{value:choice,text:choice})));
+        input.value = getPath(state.data,path) || '';
+      }else if(options.type === 'color'){
+        const row = el('div',{class:'color-row'});
+        input = el('input',{id,type:'color'});
+        const text = el('input',{type:'text'});
+        const value = getPath(state.data,path) || '#000000';
+        input.value = /^#[0-9a-f]{6}$/i.test(value) ? value : '#000000';
+        text.value = value;
+        input.addEventListener('input', () => { text.value = input.value; setPath(state.data,path,input.value); markDirty(); });
+        text.addEventListener('input', () => { if(/^#[0-9a-f]{6}$/i.test(text.value)) input.value = text.value; setPath(state.data,path,text.value); markDirty(); });
+        row.append(input,text);
+        wrap.append(row);
+        if(options.hint) wrap.append(el('p',{class:'hint',text:options.hint}));
+        return wrap;
+      }else{
+        input = el('input',{id,type:options.type || 'text'});
+        const value = getPath(state.data,path);
+        input.value = value == null ? '' : value;
+      }
+      input.addEventListener('input', () => {
+        const value = options.as === 'number' ? (input.value === '' ? null : Number(input.value)) : options.as === 'lines' ? lines(input.value) : input.value;
+        setPath(state.data,path,value);
+        markDirty();
+        if(options.preview) updatePreview(options.preview,input.value);
+      });
+      wrap.append(input);
+      if(options.hint) wrap.append(el('p',{class:'hint',text:options.hint}));
+      return wrap;
+    }
+
+    function readImageFile(file){
+      return new Promise((resolve,reject) => {
+        if(!file || !file.type.startsWith('image/')){
+          reject(new Error('Please choose an image file.'));
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error('Unable to read image file.'));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function imageField(label, path){
+      const id = 'img_' + path.replace(/[^a-z0-9]/gi,'_');
+      const previewId = id + '_preview';
+      const wrap = el('div',{class:'field full'});
+      wrap.append(el('label',{for:id,text:label}));
+      const urlInput = el('input',{id,type:'text',placeholder:'Paste an image URL or upload a file from your computer'});
+      urlInput.value = getPath(state.data,path) || '';
+      urlInput.addEventListener('input', () => {
+        setPath(state.data,path,urlInput.value);
+        markDirty();
+        updatePreview(previewId,urlInput.value);
+      });
+      const dropzone = el('div',{class:'file-dropzone',html:'<p>Drag an image here, or click the button below to choose a file from your computer.</p>'});
+      const fileInput = el('input',{type:'file',accept:'image/*'});
+      fileInput.style.display = 'none';
+      const chooseButton = el('button',{type:'button',class:'secondary',text:'Select image from PC'});
+      chooseButton.addEventListener('click', () => fileInput.click());
+      const preview = el('img',{class:'preview',id:previewId,alt:''});
+      preview.src = getPath(state.data,path) || '';
+
+      const setImageValue = value => {
+        setPath(state.data,path,value);
+        urlInput.value = value;
+        updatePreview(previewId,value);
+        markDirty();
+      };
+
+      const handleFile = async file => {
+        try{
+          const dataUrl = await readImageFile(file);
+          setImageValue(dataUrl);
+          toast('Image loaded from your computer.');
+        }catch(err){
+          toast(err.message);
+        }
+      };
+
+      dropzone.addEventListener('click', () => fileInput.click());
+      dropzone.addEventListener('dragover', event => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'copy';
+        dropzone.classList.add('dragover');
+      });
+      dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+      dropzone.addEventListener('drop', event => {
+        event.preventDefault();
+        dropzone.classList.remove('dragover');
+        const file = event.dataTransfer.files[0];
+        if(file) handleFile(file);
+      });
+      fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if(file) handleFile(file);
+      });
+
+      wrap.append(urlInput, dropzone, chooseButton, fileInput, el('p',{class:'hint',text:'Paste an image URL, or upload a local image file with drag-and-drop or the file picker.'}), preview);
+      return wrap;
+    }
+
+    function updatePreview(id, src){
+      const img = document.getElementById(id);
+      if(img) img.src = src || '';
+    }
+
+    function panel(title, help, children){
+      const box = el('section',{class:'panel'});
+      box.append(el('div',{class:'panel-head'},[
+        el('div',{},[el('h3',{text:title}), help ? el('p',{text:help}) : el('span')])
+      ]));
+      children.forEach(child => box.append(child));
+      return box;
+    }
+
+    function renderBasics(){
+      return [
+        panel('How to use', 'This editor is built for non-coders. Fill out fields and upload images without touching any code.', [
+          el('div',{},[
+            el('p',{class:'hint',text:'Click a section on the left, type or paste content in the fields, and press Save when ready.'}),
+            el('p',{class:'hint',text:'For images, use the drag/drop area or click to upload from your computer.'})
+          ])
+        ]),
+        panel('Brand', 'These values appear across the public website.', [
+          el('div',{class:'grid'},[
+            field('Website name','siteName',{placeholder:'Example: Sunshine Realty'}),
+            field('Tagline','siteTagline',{placeholder:'Example: Find your dream home today'}),
+            field('Logo alt text','logo.alt',{placeholder:'Example: Sunshine Realty logo'}),
+            imageField('Logo image','logo.src')
+          ])
+        ]),
+        panel('Contact and footer', 'Details visitors use to reach the agency.', [
+          el('div',{class:'grid'},[
+            field('Contact heading','contact.heading',{placeholder:'Example: Get in touch'}),
+            field('Contact description','contact.description',{type:'textarea',full:true,placeholder:'Write a short contact introduction'}),
+            field('Email','footer.email',{placeholder:'Example: hello@domain.com'}),
+            field('Phone','footer.phone',{placeholder:'Example: +1 555 123 4567'}),
+            field('Footer note','footer.note',{placeholder:'Example: Serving the local community.'}),
+            field('Credit','footer.credit',{placeholder:'Example: Built by Sunshine Realty'})
+          ])
+        ])
+      ];
+    }
+
+    function renderPages(){
+      return pageKeys.map(key => panel(key.charAt(0).toUpperCase() + key.slice(1) + ' page', '', [
+        el('div',{class:'grid'},[
+          field('Page title','pageMeta.' + key + '.title',{placeholder:'Example: Home – Sunshine Realty'}),
+          field('Page description','pageMeta.' + key + '.description',{type:'textarea',full:true,placeholder:'Write a short page description for search engines'})
+        ])
+      ]));
+    }
+
+    function renderTheme(){
+      return [panel('Colors and style tokens', 'Use the color picker for colors. Leave overlay and shadow values as text if they are not plain colors.', [
+        el('div',{class:'grid three'}, themeKeys.map(key => {
+          const value = getPath(state.data,'theme.' + key) || '';
+          const isColor = /^#[0-9a-f]{6}$/i.test(value);
+          return field(key,'theme.' + key,{type:isColor ? 'color' : 'text'});
+        }))
+      ])];
+    }
+
+    function renderHero(){
+      return [panel('Homepage hero', 'The first content most visitors see.', [
+        el('div',{class:'grid'},[
+          field('Small label','hero.eyebrow',{placeholder:'Example: Featured listing'}),
+          field('Main headline','hero.title',{type:'textarea',full:true,placeholder:'Write a headline for the homepage'}),
+          field('Description','hero.description',{type:'textarea',full:true,placeholder:'Describe the main offer or service'}),
+          field('Stats, one per line','hero.stats',{type:'textarea',as:'lines',full:true,placeholder:'One statistic per line'}),
+          imageField('Hero image','hero.image'),
+          field('Highlight title','hero.highlightTitle',{placeholder:'Example: Why choose us'}),
+          field('Highlight copy','hero.highlightCopy',{type:'textarea',full:true,placeholder:'Add supporting text for the highlight'})
+        ])
+      ])];
+    }
+
+    function reasonItem(reason, index){
+      const wrap = el('div',{class:'item'});
+      const title = reason.title || 'Reason ' + (index + 1);
+      wrap.append(el('div',{class:'item-title'},[
+        el('strong',{text:title}),
+        el('div',{class:'item-actions'},[
+          actionButton('Duplicate',() => { state.data.reasons.splice(index+1,0,{...reason}); render(); markDirty(); },'ghost'),
+          actionButton('Delete',() => { state.data.reasons.splice(index,1); render(); markDirty(); },'danger')
+        ])
+      ]));
+      wrap.append(el('div',{class:'grid'},[
+        listField('Icon or short label', reason, 'icon'),
+        listField('Title', reason, 'title'),
+        listField('Description', reason, 'description', {type:'textarea',full:true})
+      ]));
+      return wrap;
+    }
+
+    function categoryItem(category, index){
+      const wrap = el('div',{class:'item'});
+      wrap.append(el('div',{class:'item-title'},[
+        el('strong',{text:category.label || category.value || 'Category'}),
+        el('div',{class:'item-actions'},[
+          actionButton('Delete',() => { state.data.propertyCategories.splice(index,1); render(); markDirty(); },'danger')
+        ])
+      ]));
+      wrap.append(el('div',{class:'grid'},[
+        listField('Filter value', category, 'value'),
+        listField('Display label', category, 'label')
+      ]));
+      return wrap;
+    }
+
+    function propertyItem(item, index){
+      const wrap = el('div',{class:'item'});
+      wrap.append(el('div',{class:'item-title'},[
+        el('strong',{text:item.title || 'Property ' + (index + 1)}),
+        el('div',{class:'item-actions'},[
+          el('span',{class:'pill',text:item.status || 'No status'}),
+          actionButton('Duplicate',() => { state.data.properties.splice(index+1,0,{...item,id:nextPropertyId()}); render(); markDirty(); },'ghost'),
+          actionButton('Delete',() => { state.data.properties.splice(index,1); render(); markDirty(); },'danger')
+        ])
+      ]));
+      wrap.append(el('div',{class:'grid three'},[
+        listField('ID', item, 'id', {type:'number',as:'number',placeholder:'Auto-generated'}),
+        listField('Title', item, 'title',{placeholder:'Example: Modern 3-bed home'}),
+        listField('Type', item, 'type', {type:'select', choices:(state.data.propertyCategories || []).map(c => c.value),placeholder:'Choose a category'}),
+        listField('Location', item, 'location',{placeholder:'Example: Downtown'}),
+        listField('Price', item, 'price',{placeholder:'Example: $420,000'}),
+        listField('Status', item, 'status',{placeholder:'Example: Available'}),
+        listField('Bedrooms', item, 'beds', {type:'number',as:'number',placeholder:'e.g. 3'}),
+        listField('Bathrooms', item, 'baths', {type:'number',as:'number',placeholder:'e.g. 2'}),
+        listField('Area', item, 'area',{placeholder:'Example: 1,450 sqft'}),
+        listField('Parking', item, 'parking',{placeholder:'Example: 2 spaces'}),
+        listField('Main image', item, 'image', {full:true,preview:'property_preview_' + index,placeholder:'Paste image URL or use upload'}),
+        listField('Description', item, 'desc', {type:'textarea',full:true,placeholder:'Write a short description'}),
+        listField('Gallery images, one per line', item, 'gallery', {type:'textarea',as:'lines',full:true,placeholder:'One image URL per line'}),
+        listField('Features, one per line', item, 'features', {type:'textarea',as:'lines',full:true,placeholder:'One feature per line'})
+      ]));
+      const preview = el('img',{class:'preview',id:'property_preview_' + index,alt:''});
+      preview.src = item.image || '';
+      wrap.append(preview);
+      return wrap;
+    }
+
+    function listField(label, obj, key, options={}){
+      const id = 'l_' + key + Math.random().toString(16).slice(2);
+      const wrap = el('div',{class:'field ' + (options.full ? 'full' : '')});
+      wrap.append(el('label',{for:id,text:label}));
+      let input;
+      if(options.type === 'textarea'){
+        input = el('textarea',{id,placeholder:options.placeholder || ''});
+        input.value = toText(obj[key]);
+      }else if(options.type === 'select'){
+        input = el('select',{id});
+        if(options.placeholder) input.append(el('option',{value:'',text:options.placeholder}));
+        const choices = [...new Set([obj[key], ...(options.choices || [])].filter(Boolean))];
+        choices.forEach(choice => input.append(el('option',{value:choice,text:choice})));
+        input.value = obj[key] || '';
+      }else{
+        input = el('input',{id,type:options.type || 'text',placeholder:options.placeholder || ''});
+        input.value = obj[key] == null ? '' : obj[key];
+      }
+      input.addEventListener('input', () => {
+        obj[key] = options.as === 'number' ? (input.value === '' ? null : Number(input.value)) : options.as === 'lines' ? lines(input.value) : input.value;
+        if(options.preview) updatePreview(options.preview,input.value);
+        markDirty();
+      });
+      wrap.append(input);
+      return wrap;
+    }
+
+    function actionButton(text, onClick, kind='secondary'){
+      const button = el('button',{type:'button',class:kind,text});
+      button.addEventListener('click',onClick);
+      return button;
+    }
+
+    function renderList(title, help, listKey, makeItem, emptyText, blankItem){
+      const list = state.data[listKey] || [];
+      const items = el('div',{class:'items'});
+      if(list.length) list.forEach((item,index) => items.append(makeItem(item,index)));
+      else items.append(el('div',{class:'empty',text:emptyText}));
+      const add = actionButton('Add new',() => {
+        if(!state.data[listKey]) state.data[listKey] = [];
+        state.data[listKey].push(typeof blankItem === 'function' ? blankItem() : {...blankItem});
+        render();
+        markDirty();
+      },'success');
+      const box = panel(title,help,[items]);
+      $('.panel-head',box).append(add);
+      return [box];
+    }
+
+    function nextPropertyId(){
+      return Math.max(0,...(state.data.properties || []).map(item => Number(item.id) || 0)) + 1;
+    }
+
+    function renderRaw(){
+      const text = el('textarea',{id:'rawJson'});
+      text.value = JSON.stringify(state.data,null,2);
+      text.addEventListener('input', () => {
+        try{
+          state.data = JSON.parse(text.value);
+          state.rawValid = true;
+          $('#status').textContent = 'Raw JSON is valid, unsaved changes';
+        }catch(err){
+          state.rawValid = false;
+          $('#status').textContent = 'Raw JSON has an error';
+        }
+      });
+      return [panel('Advanced JSON editor', 'Use this only when you need to paste or inspect the full content file.', [el('div',{class:'raw'},[text])])];
+    }
+
+    function render(){
+      const def = sections.find(section => section.id === state.active) || sections[0];
+      $('#pageTitle').textContent = def.title;
+      $('#pageHelp').textContent = def.help;
+      $('#nav').innerHTML = '';
+      sections.forEach(section => {
+        const btn = el('button',{type:'button',text:section.title,class:section.id === state.active ? 'active' : ''});
+        btn.addEventListener('click',() => { state.active = section.id; render(); });
+        $('#nav').append(btn);
+      });
+      const content = $('#content');
+      content.innerHTML = '';
+      const views = {
+        basics: renderBasics,
+        pages: renderPages,
+        theme: renderTheme,
+        hero: renderHero,
+        reasons: () => renderList('Reasons to choose the agency','Add short cards that build trust.','reasons',reasonItem,'No reasons yet.',() => ({icon:'',title:'',description:''})),
+        categories: () => renderList('Property categories','Visitors can filter listings by these values.','propertyCategories',categoryItem,'No categories yet.',() => ({value:'New category',label:'New category'})),
+        properties: () => renderList('Property listings','Each listing can have a gallery and feature list.','properties',propertyItem,'No properties yet.',() => ({id:nextPropertyId(),image:'',gallery:[],type:'Residential',title:'New property',location:'',price:'',status:'Available',beds:null,baths:null,area:'',parking:'',desc:'',features:[]})),
+        raw: renderRaw
+      };
+      views[state.active]().forEach(node => content.append(node));
+    }
+
     async function load(){
       try{
-        const res = await fetch('data/data.json');
-        if(!res.ok) throw new Error('fetch failed');
-        const txt = await res.text();
-        document.getElementById('editor').value = txt;
-      }catch(e){
-        document.getElementById('editor').value = JSON.stringify(window.__fallback||{},null,2);
+        const res = await fetch('data/data.json?ts=' + Date.now());
+        if(!res.ok) throw new Error('Could not load data/data.json');
+        state.data = await res.json();
+        $('#status').textContent = 'Content loaded';
+        render();
+      }catch(err){
+        state.data = { siteName:'', siteTagline:'', pageMeta:{}, logo:{}, theme:{}, hero:{stats:[]}, reasons:[], contact:{}, footer:{}, propertyCategories:[], properties:[] };
+        $('#status').textContent = 'Started with empty content';
+        render();
+        toast(err.message);
       }
     }
 
-    document.getElementById('save').addEventListener('click', async ()=>{
-      const payload = document.getElementById('editor').value;
+    async function save(){
+      if(!state.rawValid){
+        toast('Fix the raw JSON error before saving.');
+        return;
+      }
       try{
-        // POST to a simple server endpoint (not implemented in static mode)
         const res = await fetch('/save', {
           method:'POST',
           headers:{'Content-Type':'application/json'},
-          body:payload
+          body:JSON.stringify(state.data)
         });
-        if(res.ok) alert('Saved. If running static server, manually update data/data.json');
-        else alert('Save failed: ' + res.statusText);
+        if(!res.ok) throw new Error(await res.text() || 'Save failed');
+        $('#status').textContent = 'Saved just now';
+        toast('Saved to data/data.json');
       }catch(err){
-        // Fallback: download file for manual replacement
-        const blob = new Blob([payload], {type:'application/json'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = 'data.json'; a.click(); URL.revokeObjectURL(url);
-        alert('Download ready. Replace data/data.json with downloaded file.');
+        download();
+        toast('Could not save through the server. A data.json download was created instead.');
       }
-    });
+    }
 
+    function download(){
+      const blob = new Blob([JSON.stringify(state.data,null,2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'data.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    $('#saveBtn').addEventListener('click',save);
+    $('#downloadBtn').addEventListener('click',download);
+    $('#reloadBtn').addEventListener('click',load);
     load();
   </script>
 </body>

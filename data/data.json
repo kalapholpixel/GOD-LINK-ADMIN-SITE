@@ -1,60 +1,269 @@
 {
-	"siteName": "God Link Agency",
-	"siteTagline": "Premium property sales across Ghana",
-	"pageMeta": {
-		"home": { "title": "Premium Property Sales", "description": "Premium property sales across Ghana" },
-		"listings": { "title": "Properties", "description": "Explore homes, commercial spaces, and land opportunities that are ready for viewing and investment." },
-		"contact": { "title": "Contact", "description": "Share a few details and we’ll get in touch with available times, guidance, and the best next step." },
-		"property": { "title": "Property Details", "description": "View full details, photos, and next steps for this property." }
-	},
-	"logo": { "src": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=256&q=80", "alt": "God Link Agency logo" },
-	"theme": {
-		"ink": "#171717",
-		"ink2": "#57534e",
-		"paper": "#f8f5eb",
-		"paper2": "#efe8d8",
-		"paper3": "#e1d8c2",
-		"primary": "#b8890e",
-		"primarySoft": "#f8ebc8",
-		"success": "#1d6b44",
-		"successSoft": "#e0f5eb",
-		"danger": "#a23c3c",
-		"dangerSoft": "#fbeaea",
-		"background": "#fcfbf7",
-		"overlay": "rgba(248, 245, 235, 0.9)",
-		"overlayLight": "rgba(255,255,255,0.88)",
-		"shadow": "0 12px 30px rgba(252, 235, 235, 0.08)"
-	},
-	"hero": {
-		"eyebrow": "Premium real estate in Ghana",
-		"title": "Find a home, office, or land investment that feels like the right next step.",
-		"description": "We curate premium properties with a focus on location, quality, and long-term value so buying or investing feels calm and confident.",
-		"stats": ["8+ active listings", "3 property types", "5+ years of trust"],
-		"image": "images/WhatsApp Image 2026-06-27 at 11.49.13 AM (2).jpeg",
-		"highlightTitle": "Featured viewing this week",
-		"highlightCopy": "A calm, spacious residence in East Legon with a garden, modern kitchen, and excellent security."
-	},
-	"reasons": [
-		{ "icon": "🏘️", "title": "Curated inventory", "description": "We show only properties that genuinely match the client’s goals, budget, and lifestyle." },
-		{ "icon": "🧭", "title": "Local insight", "description": "Our team understands the neighborhoods, amenities, and investment potential that matter." },
-		{ "icon": "🤝", "title": "Personal support", "description": "From first enquiry to closing, we make the experience clear and easy to navigate." }
-	],
-	"contact": { "heading": "Let’s arrange a viewing", "description": "Share a few details and we’ll get in touch with available times, guidance, and the best next step." },
-	"footer": { "email": "info@godlinkagency.com", "phone": "+233 24 342 8752", "note": "Premium property sales across Ghana.", "credit": "Created by KL STUDIOS" },
-	"propertyCategories": [
-		{ "value": "All", "label": "All" },
-		{ "value": "Residential", "label": "Residential" },
-		{ "value": "Commercial", "label": "Commercial" },
-		{ "value": "Land", "label": "Land" },
-		{ "value": "Luxury", "label": "Luxury" },
-		{ "value": "Shortlet", "label": "Shortlet" }
-	],
-	"properties": [
-		{ "id": 1, "image": "images/1.jpeg", "gallery": ["images/WhatsApp Image 2026-06-27 at 11.49.08 AM (1).jpeg","images/WhatsApp Image 2026-06-27 at 11.49.08 AM.jpeg","images/WhatsApp Image 2026-06-27 at 11.49.09 AM (1).jpeg","images/WhatsApp Image 2026-06-27 at 11.49.09 AM (2).jpeg","images/WhatsApp Image 2026-06-27 at 11.49.10 AM (2).jpeg","images/WhatsApp Image 2026-06-27 at 11.49.10 AM.jpeg","images/WhatsApp Image 2026-06-27 at 11.49.11 AM (2).jpeg","images/WhatsApp Image 2026-06-27 at 11.49.11 AM.jpeg","images/WhatsApp Image 2026-06-27 at 11.49.15 AM (1).jpeg","images/WhatsApp Image 2026-06-27 at 11.49.15 AM (2).jpeg","images/WhatsApp Image 2026-06-27 at 11.49.16 AM (2).jpeg"], "type": "Residential", "title": "3-bedroom apartment", "location": "Airport", "price": "$2,000/mo", "status": "Available", "beds": 3, "baths": 2, "area": "", "parking": "", "desc": "A polished apartment in a gated estate with a garden, modern kitchen, and security throughout.", "features": ["Gated community","24/7 security","Backup generator","Solar-ready"] },
-		{ "id": 2, "image": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80", "gallery": ["https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1515165562835-cfdb7b42d6bd?auto=format&fit=crop&w=1200&q=80"], "type": "Commercial", "title": "Airport City Office Space", "location": "Airport City, Accra", "price": "$1,750 / mo", "status": "Available", "beds": null, "baths": 2, "area": "320 sqm", "parking": "10 cars", "desc": "A premium office floor with fibre, conference rooms, and immediate access to the city’s business hub.", "features": ["Fibre internet","Conference room","Reception","CCTV"] },
-		{ "id": 3, "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80", "gallery": ["https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1516900557540-10b1cce2840b?auto=format&fit=crop&w=1200&q=80"], "type": "Land", "title": "Half-Acre Residential Plot", "location": "Adenta, Accra", "price": "$41,000", "status": "Available", "beds": null, "baths": null, "area": "0.5 acre", "parking": null, "desc": "A titled plot in a fast-developing community, perfect for a modern residence or investment.", "features": ["Titled land","Road access","Water connection","Ready documentation"] },
-		{ "id": 4, "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80", "gallery": ["https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80"], "type": "Residential", "title": "2-Bedroom Apartment", "location": "Cantonments, Accra", "price": "$91,000", "status": "Available", "beds": 2, "baths": 2, "area": "105 sqm", "parking": "1 car", "desc": "A refined apartment with built-in wardrobes, a private balcony, and a calm residential setting.", "features": ["Private balcony","Gym","Swimming pool","Concierge"] },
-		{ "id": 5, "image": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80", "gallery": ["https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1533106418980-9314f6c5c140?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1531996356976-9e5d4d4ad391?auto=format&fit=crop&w=1200&q=80"], "type": "Commercial", "title": "Retail Shop — Ground Floor", "location": "Osu, Accra", "price": "$1,200 / mo", "status": "Available", "beds": null, "baths": 1, "area": "75 sqm", "parking": "2 cars", "desc": "High footfall retail space in Osu with a glass frontage and excellent visibility.", "features": ["High visibility","Storage room","Air conditioning","Signage ready"] },
-		{ "id": 6, "image": "https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1200&q=80", "gallery": ["https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1509587584298-0da20e1c1ed0?auto=format&fit=crop&w=1200&q=80","https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80"], "type": "Land", "title": "2-Acre Agricultural Land", "location": "Dodowa, Greater Accra", "price": "$26,000", "status": "Available", "beds": null, "baths": null, "area": "2 acres", "parking": null, "desc": "A productive parcel of land ideal for agribusiness, farming, or future development.", "features": ["Fertile soil","Stream access","Road access","Investment potential"] }
-	]
+  "siteName": "God Link Agency Updated",
+  "siteTagline": "Premium property sales across Ghana",
+  "pageMeta": {
+    "home": {
+      "title": "Premium Property Sales",
+      "description": "Premium property sales across Ghana"
+    },
+    "listings": {
+      "title": "Properties",
+      "description": "Explore homes, commercial spaces, and land opportunities that are ready for viewing and investment."
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Share a few details and we’ll get in touch with available times, guidance, and the best next step."
+    },
+    "property": {
+      "title": "Property Details",
+      "description": "View full details, photos, and next steps for this property."
+    }
+  },
+  "logo": {
+    "src": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=256&q=80",
+    "alt": "God Link Agency logo"
+  },
+  "theme": {
+    "ink": "#171717",
+    "ink2": "#57534e",
+    "paper": "#f8f5eb",
+    "paper2": "#efe8d8",
+    "paper3": "#e1d8c2",
+    "primary": "#b8890e",
+    "primarySoft": "#f8ebc8",
+    "success": "#1d6b44",
+    "successSoft": "#e0f5eb",
+    "danger": "#a23c3c",
+    "dangerSoft": "#fbeaea",
+    "background": "#fcfbf7",
+    "overlay": "rgba(248, 245, 235, 0.9)",
+    "overlayLight": "rgba(255,255,255,0.88)",
+    "shadow": "0 12px 30px rgba(252, 235, 235, 0.08)"
+  },
+  "hero": {
+    "eyebrow": "Premium real estate in Ghana",
+    "title": "Find a home, office, or land investment that feels like the right next step.",
+    "description": "We curate premium properties with a focus on location, quality, and long-term value so buying or investing feels calm and confident.",
+    "stats": [
+      "8+ active listings",
+      "3 property types",
+      "5+ years of trust"
+    ],
+    "image": "images/WhatsApp Image 2026-06-27 at 11.49.13 AM (2).jpeg",
+    "highlightTitle": "Featured viewing this week",
+    "highlightCopy": "A calm, spacious residence in East Legon with a garden, modern kitchen, and excellent security."
+  },
+  "reasons": [
+    {
+      "icon": "🏘️",
+      "title": "Curated inventory",
+      "description": "We show only properties that genuinely match the client’s goals, budget, and lifestyle."
+    },
+    {
+      "icon": "🧭",
+      "title": "Local insight",
+      "description": "Our team understands the neighborhoods, amenities, and investment potential that matter."
+    },
+    {
+      "icon": "🤝",
+      "title": "Personal support",
+      "description": "From first enquiry to closing, we make the experience clear and easy to navigate."
+    }
+  ],
+  "contact": {
+    "heading": "Let’s arrange a viewing",
+    "description": "Share a few details and we’ll get in touch with available times, guidance, and the best next step."
+  },
+  "footer": {
+    "email": "info@godlinkagency.com",
+    "phone": "+233 24 342 8752",
+    "note": "Premium property sales across Ghana.",
+    "credit": "Created by KL STUDIOS"
+  },
+  "propertyCategories": [
+    {
+      "value": "All",
+      "label": "All"
+    },
+    {
+      "value": "Residential",
+      "label": "Residential"
+    },
+    {
+      "value": "Commercial",
+      "label": "Commercial"
+    },
+    {
+      "value": "Land",
+      "label": "Land"
+    },
+    {
+      "value": "Luxury",
+      "label": "Luxury"
+    },
+    {
+      "value": "Shortlet",
+      "label": "Shortlet"
+    }
+  ],
+  "properties": [
+    {
+      "id": 1,
+      "image": "images/1.jpeg",
+      "gallery": [
+        "images/WhatsApp Image 2026-06-27 at 11.49.08 AM (1).jpeg",
+        "images/WhatsApp Image 2026-06-27 at 11.49.08 AM.jpeg",
+        "images/WhatsApp Image 2026-06-27 at 11.49.09 AM (1).jpeg",
+        "images/WhatsApp Image 2026-06-27 at 11.49.09 AM (2).jpeg",
+        "images/WhatsApp Image 2026-06-27 at 11.49.10 AM (2).jpeg",
+        "images/WhatsApp Image 2026-06-27 at 11.49.10 AM.jpeg",
+        "images/WhatsApp Image 2026-06-27 at 11.49.11 AM (2).jpeg",
+        "images/WhatsApp Image 2026-06-27 at 11.49.11 AM.jpeg",
+        "images/WhatsApp Image 2026-06-27 at 11.49.15 AM (1).jpeg",
+        "images/WhatsApp Image 2026-06-27 at 11.49.15 AM (2).jpeg",
+        "images/WhatsApp Image 2026-06-27 at 11.49.16 AM (2).jpeg"
+      ],
+      "type": "Residential",
+      "title": "3-bedroom apartment",
+      "location": "Airport",
+      "price": "$2,000/mo",
+      "status": "Available",
+      "beds": 3,
+      "baths": 2,
+      "area": "",
+      "parking": "",
+      "desc": "A polished apartment in a gated estate with a garden, modern kitchen, and security throughout.",
+      "features": [
+        "Gated community",
+        "24/7 security",
+        "Backup generator",
+        "Solar-ready"
+      ]
+    },
+    {
+      "id": 2,
+      "image": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1515165562835-cfdb7b42d6bd?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "type": "Commercial",
+      "title": "Airport City Office Space",
+      "location": "Airport City, Accra",
+      "price": "$1,750 / mo",
+      "status": "Available",
+      "beds": null,
+      "baths": 2,
+      "area": "320 sqm",
+      "parking": "10 cars",
+      "desc": "A premium office floor with fibre, conference rooms, and immediate access to the city’s business hub.",
+      "features": [
+        "Fibre internet",
+        "Conference room",
+        "Reception",
+        "CCTV"
+      ]
+    },
+    {
+      "id": 3,
+      "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1516900557540-10b1cce2840b?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "type": "Land",
+      "title": "Half-Acre Residential Plot",
+      "location": "Adenta, Accra",
+      "price": "$41,000",
+      "status": "Available",
+      "beds": null,
+      "baths": null,
+      "area": "0.5 acre",
+      "parking": null,
+      "desc": "A titled plot in a fast-developing community, perfect for a modern residence or investment.",
+      "features": [
+        "Titled land",
+        "Road access",
+        "Water connection",
+        "Ready documentation"
+      ]
+    },
+    {
+      "id": 4,
+      "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "type": "Residential",
+      "title": "2-Bedroom Apartment",
+      "location": "Cantonments, Accra",
+      "price": "$91,000",
+      "status": "Available",
+      "beds": 2,
+      "baths": 2,
+      "area": "105 sqm",
+      "parking": "1 car",
+      "desc": "A refined apartment with built-in wardrobes, a private balcony, and a calm residential setting.",
+      "features": [
+        "Private balcony",
+        "Gym",
+        "Swimming pool",
+        "Concierge"
+      ]
+    },
+    {
+      "id": 5,
+      "image": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1533106418980-9314f6c5c140?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1531996356976-9e5d4d4ad391?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "type": "Commercial",
+      "title": "Retail Shop — Ground Floor",
+      "location": "Osu, Accra",
+      "price": "$1,200 / mo",
+      "status": "Available",
+      "beds": null,
+      "baths": 1,
+      "area": "75 sqm",
+      "parking": "2 cars",
+      "desc": "High footfall retail space in Osu with a glass frontage and excellent visibility.",
+      "features": [
+        "High visibility",
+        "Storage room",
+        "Air conditioning",
+        "Signage ready"
+      ]
+    },
+    {
+      "id": 6,
+      "image": "https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1509587584298-0da20e1c1ed0?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "type": "Land",
+      "title": "2-Acre Agricultural Land",
+      "location": "Dodowa, Greater Accra",
+      "price": "$26,000",
+      "status": "Available",
+      "beds": null,
+      "baths": null,
+      "area": "2 acres",
+      "parking": null,
+      "desc": "A productive parcel of land ideal for agribusiness, farming, or future development.",
+      "features": [
+        "Fertile soil",
+        "Stream access",
+        "Road access",
+        "Investment potential"
+      ]
+    }
+  ]
 }
